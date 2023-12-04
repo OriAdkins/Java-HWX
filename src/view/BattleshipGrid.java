@@ -46,10 +46,4 @@ public class BattleshipGrid extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new BattleshipGrid().setVisible(true);
-        });
-    }
-
 }

@@ -2,8 +2,8 @@
  * Published by Ori Adkins and Ryan Rowe
  */
 
- import com.battleship.controller.GameController;
- import com.battleship.view.GUIView;
+ import control.GameController;
+ import view.GUIView;
  
  public class Battleship {
      public static void main(String[] args) {

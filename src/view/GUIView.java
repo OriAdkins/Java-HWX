@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class GUIView implements GameView {
     private static final int GRID_SIZE = 10; // Change this for a larger or smaller grid
@@ -20,10 +22,16 @@ public class GUIView implements GameView {
 
             for (int row = 0; row < GRID_SIZE; row++) {
                 for (int col = 0; col < GRID_SIZE; col++) {
-                    JButton cellButton = new JButton();
-                    cellButton.setPreferredSize(new Dimension(50, 50)); // Adjust button size as needed
-                    cellButton.addActionListener(new CellClickListener(row, col));
-                    gridPanel.add(cellButton);
+                    JPanel cellPanel = new JPanel();
+                    cellPanel.setPreferredSize(new Dimension(50, 50)); // Adjust panel size as needed
+                    cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Add a border for visibility
+
+                    // Add a label to make the panels visually distinct
+                    JLabel label = new JLabel(String.format("[%d, %d]", row, col), SwingConstants.CENTER);
+                    cellPanel.add(label);
+
+                    cellPanel.addMouseListener(new CellMouseListener(row, col));
+                    gridPanel.add(cellPanel);
                 }
             }
 
@@ -46,19 +54,19 @@ public class GUIView implements GameView {
         // Update GUI to reflect the state of a specific cell on the game board
     }
 
-    // ActionListener for cell buttons
-    private class CellClickListener implements ActionListener {
+    // MouseListener for cell panels
+    private class CellMouseListener extends MouseAdapter {
         private final int row;
         private final int col;
 
-        public CellClickListener(int row, int col) {
+        public CellMouseListener(int row, int col) {
             this.row = row;
             this.col = col;
         }
 
         @Override
-        public void actionPerformed(ActionEvent e) {
-            // Handle button click and update the game state (notify GameController)
+        public void mouseClicked(MouseEvent e) {
+            // Handle mouse click and update the game state (notify GameController)
         }
     }
 }
