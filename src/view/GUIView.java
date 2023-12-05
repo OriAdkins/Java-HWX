@@ -66,7 +66,15 @@ public class GUIView implements GameView {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            // Handle mouse click and update the game state (notify GameController)
+            //testing to show which cell was clicked on.
+            System.out.println("Clicked on cell: " + row + ", " + col);
+
+            //turn them to red (just to show it works)
+            JPanel cellPanel = (JPanel) e.getSource();
+            cellPanel.setBackground(Color.RED);
+
+            // disable this cell (it is out of play)
+            cellPanel.removeMouseListener(this);
         }
     }
 }
