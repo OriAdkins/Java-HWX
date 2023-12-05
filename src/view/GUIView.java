@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class GUIView implements GameView {
     private static final int GRID_SIZE = 10; // Change this for a larger or smaller grid
@@ -17,6 +20,20 @@ public class GUIView implements GameView {
             frame = new JFrame("Battleship Game");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setLayout(new BorderLayout());
+            //rules feature
+            JLabel rules = new JLabel("Click here to see the rules", SwingConstants.CENTER);
+            //setting border
+            int topThickness = 10;
+            int bottomThickness = 10;
+            rules.setBorder(BorderFactory.createMatteBorder(topThickness, 0, bottomThickness, 0, Color.BLACK));
+            //when clicked, take the user to a rules page
+            rules.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                // Execute code when the jlabel rules is clicked
+                openWebpage("https://www.hasbro.com/common/instruct/battleship.pdf");
+            }
+            });
+            frame.add(rules, BorderLayout.NORTH);
 
             JPanel gridPanel = new JPanel(new GridLayout(GRID_SIZE, GRID_SIZE));
 
@@ -75,6 +92,14 @@ public class GUIView implements GameView {
 
             // disable this cell (it is out of play)
             cellPanel.removeMouseListener(this);
+        }
+    }
+    //rules feature
+    private void openWebpage(String url) {
+        try {
+            Desktop.getDesktop().browse(new URI(url)); //opening URL (obtained from URI object) in default web browser on user's desktop
+        } catch (IOException | URISyntaxException er) {
+            er.printStackTrace(); //must be in a try catch block to be exucuted
         }
     }
 }
