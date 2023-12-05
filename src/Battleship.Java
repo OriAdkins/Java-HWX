@@ -3,7 +3,7 @@
  */
 
  import control.GameController;
- import view.GUIView;
+ import view.*;
  
  public class Battleship {
      public static void main(String[] args) {

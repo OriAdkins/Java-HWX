@@ -14,6 +14,14 @@ public class GUIView implements GameView {
     private static final int GRID_SIZE = 10; // Change this for a larger or smaller grid
 
     private JFrame frame;
+    //should be 15 enemy spaces
+    //array of the board, determines which panels are enemies
+    boolean[][] enemies = new boolean[10][10];
+    private CellClickListener cellClickListener;
+
+    public void setCellClickListener(CellClickListener listener) {
+        this.cellClickListener = listener;
+    }
 
     public GUIView() {
         SwingUtilities.invokeLater(() -> {
@@ -83,15 +91,22 @@ public class GUIView implements GameView {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+            /*for (int i = 0; i < 10; i++){
+                enemies[i][i] = true;
+            }
             //testing to show which cell was clicked on.
             System.out.println("Clicked on cell: " + row + ", " + col);
 
-            //turn them to red (just to show it works)
+            //if clicked cell is an enemy (hit), turn red. if not, turn grey
             JPanel cellPanel = (JPanel) e.getSource();
-            cellPanel.setBackground(Color.RED);
+            if (enemies[row][col]) cellPanel.setBackground(Color.RED);
+            else cellPanel.setBackground(Color.GRAY);
 
             // disable this cell (it is out of play)
-            cellPanel.removeMouseListener(this);
+            cellPanel.removeMouseListener(this);*/
+            if (cellClickListener != null) {
+                cellClickListener.onCellClicked(row, col, (JPanel) e.getSource());
+            }
         }
     }
     //rules feature
