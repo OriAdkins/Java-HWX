@@ -6,8 +6,8 @@ import java.awt.Color;
 
 public class GameController implements CellClickListener { //providing implementation for CellClickListener
     private GUIView guiView;
-    Player p1;
-    Player p2;
+    Player p1 = new Player();
+    Player p2 = new Player();
     boolean[][] p1hits = new boolean[10][10];  //represents hit spaces on player 1's board
     boolean[][] p2hits = new boolean[10][10];
     boolean isP1 = true;
