@@ -27,6 +27,8 @@ public class GUIView implements GameView {
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Battleship Game");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            //Start Screen here
+            //Start Screen here
             frame.setLayout(new BorderLayout());
             //rules feature
             JLabel rules = new JLabel("Click here to see the rules", SwingConstants.CENTER);
@@ -105,7 +107,7 @@ public class GUIView implements GameView {
             // disable this cell (it is out of play)
             cellPanel.removeMouseListener(this);*/
             if (cellClickListener != null) {
-                cellClickListener.onCellClicked(row, col, (JPanel) e.getSource());
+                cellClickListener.CellClick(row, col, (JPanel) e.getSource());
             }
         }
     }

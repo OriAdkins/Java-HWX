@@ -4,17 +4,17 @@
 
  import control.GameController;
  import view.*;
- 
+
  public class Battleship {
-     public static void main(String[] args) {
-         // Create an instance of GUIView (or any other implementation of GameView)
-         GUIView guiView = new GUIView();
+    public static void main(String[] args) {
+        // Create an instance of GUIView (or any other implementation of GameView)
+        //GUIView guiView = new GUIView();
+        StartScreen startScreen = new StartScreen();
  
-         // Create an instance of GameController and pass the view to it
-         GameController gameController = new GameController(guiView);
- 
-         // Start the game loop
-         gameController.startGame();
-     }
- }
- 
+        // Create an instance of GameController and pass the view to it
+        //GameController gameController = new GameController(guiView);
+        
+        // Start the game loop
+        //gameController.startGame();
+    }
+}

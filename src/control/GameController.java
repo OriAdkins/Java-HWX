@@ -6,6 +6,7 @@ import java.awt.Color;
 
 public class GameController implements CellClickListener { //providing implementation for CellClickListener
     private GUIView guiView;
+    //right now, both players occupy the same spaces on the board
     Player p1 = new Player();
     Player p2 = new Player();
     boolean[][] p1hits = new boolean[10][10];  //represents hit spaces on player 1's board
@@ -19,7 +20,7 @@ public class GameController implements CellClickListener { //providing implement
     }
     //implementation
     @Override
-    public void onCellClicked(int row, int col, JPanel cellPanel) {
+    public void CellClick(int row, int col, JPanel cellPanel) {
         //only listen for clicks once the game has started
         if (turnActive){
             //panel has been clicked, if it's player 1's turn...
