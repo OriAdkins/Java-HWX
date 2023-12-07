@@ -3,32 +3,43 @@ package control; // Adjust package as needed
 import view.*;
 import javax.swing.*;
 import java.awt.Color;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameController implements CellClickListener { //providing implementation for CellClickListener
-    private GUIView guiView;
+    private GUIView guiView; //right now, is player 1's attack board; red = player 2's ships they've downed
+    private GUIView guiView2;
     //right now, both players occupy the same spaces on the board
     Player p1 = new Player();
     Player p2 = new Player();
-    boolean[][] p1hits = new boolean[10][10];  //represents hit spaces on player 1's board
+    boolean[][] p1hits = new boolean[10][10];  //ships on player 1's board that player 2 has hit
     boolean[][] p2hits = new boolean[10][10];
+    int p1hitCount = 0;
+    int p2hitCount = 0;
     boolean isP1 = true;
     boolean turnActive = false;
+    private Timer timer = new Timer();
 
-    public GameController(GUIView guiView) {
+    public GameController(GUIView guiView, GUIView guiView2) {
         this.guiView = guiView; 
         guiView.setCellClickListener(this); //makes GameController a CellClickListener
+        this.guiView2 = guiView2; 
+        guiView2.setCellClickListener(this);
     }
     //implementation
     @Override
-    public void CellClick(int row, int col, JPanel cellPanel) {
+    public void CellClick(int row, int col, JPanel cellPanel, GUIView currView) {
         //only listen for clicks once the game has started
         if (turnActive){
-            //panel has been clicked, if it's player 1's turn...
+            //panel has been clicked, it's player 1's turn...
             if (isP1){
                 //if that gridspace hasn't been hit yet...
                 if (!p2hits[row][col]){
                 //if clicked cell is an enemy (hit), turn red. if not, turn grey
-                    if (p2.isOccupied(row, col)) cellPanel.setBackground(Color.RED);
+                    if (p2.isOccupied(row, col)){
+                        cellPanel.setBackground(Color.RED);
+                        p2hitCount++;
+                    }
                     else cellPanel.setBackground(Color.GRAY);
                     p2hits[row][col] = true;
                     isP1 = false;
@@ -36,15 +47,22 @@ public class GameController implements CellClickListener { //providing implement
             }
             else {
                 if (!p1hits[row][col]){
-                    if (p1.isOccupied(row, col)) cellPanel.setBackground(Color.RED);
+                    if (p1.isOccupied(row, col)){
+                        cellPanel.setBackground(Color.RED);
+                        p1hitCount++;
+                    }
                     else cellPanel.setBackground(Color.GRAY);
                     p1hits[row][col] = true;
                     isP1 = true;
                 }
             }
+            //creating a TimerTask object where updateView() is run inside run(), happens every .6 seconds
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    updateView();
+                }
+            }, 600);
             turnActive = false;
-            updateView();
-            System.out.println("Turn is over");
         }
     }
 
@@ -77,13 +95,30 @@ public class GameController implements CellClickListener { //providing implement
     private void updateView() {
         // Update the view to reflect the current game state
         // This involves calling methods on the GameView interface
-        guiView.displayMessage("It's the next player's turn."); // Example message
         System.out.println("turn switched");
+        if (isGameOver()){
+            timer.cancel();
+            guiView.hide();
+            guiView2.hide();
+            System.out.println("Game Over");
+        }
+        else if (isP1){
+            guiView.hide();
+            guiView2.show();
+            playerTurn();
+        }
+        else if (!isP1){
+            guiView2.hide();
+            guiView.show();
+            playerTurn();
+        }
         // You might also call other methods on gameView to update the board state, etc.
-        playerTurn();
     }
 
     private boolean isGameOver() {
+        if (p1hitCount == 10 || p2hitCount == 10){
+            return true;
+        }
         // Implement logic to check if the game is over
         // This might involve checking win conditions, reaching a certain turn limit, etc.
         return false; // Placeholder; replace with actual game-over logic
@@ -108,5 +143,8 @@ class Player{
     public boolean isOccupied(int x, int y){
         if (ships[x][y]) return true;
         return false;
+    }
+    public void addShip(int x, int y){
+        ships[x][y] = true;
     }
 }

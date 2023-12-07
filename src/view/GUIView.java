@@ -27,8 +27,6 @@ public class GUIView implements GameView {
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Battleship Game");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            //Start Screen here
-            //Start Screen here
             frame.setLayout(new BorderLayout());
             //rules feature
             JLabel rules = new JLabel("Click here to see the rules", SwingConstants.CENTER);
@@ -39,30 +37,38 @@ public class GUIView implements GameView {
             //when clicked, take the user to a rules page
             rules.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                // Execute code when the jlabel rules is clicked
+                // Open the rules webpage when the jlabel rules is clicked
                 openWebpage("https://www.hasbro.com/common/instruct/battleship.pdf");
             }
             });
             frame.add(rules, BorderLayout.NORTH);
 
-            JPanel gridPanel = new JPanel(new GridLayout(GRID_SIZE, GRID_SIZE));
-
-            for (int row = 0; row < GRID_SIZE; row++) {
+            JPanel gridPanel = new JPanel(new GridLayout(21, GRID_SIZE));
+            //creating the top board (player's board, shows your ships)
+            for (int row = 0; row < 21; row++) {
                 for (int col = 0; col < GRID_SIZE; col++) {
-                    JPanel cellPanel = new JPanel();
-                    cellPanel.setPreferredSize(new Dimension(50, 50)); // Adjust panel size as needed
-                    cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Add a border for visibility
+                    if (row != 10){
+                        JPanel cellPanel = new JPanel();
+                        cellPanel.setPreferredSize(new Dimension(35, 25)); // Adjust panel size as needed
+                        cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Add a border for visibility
 
-                    // Add a label to make the panels visually distinct
-                    JLabel label = new JLabel(String.format("[%d, %d]", row, col), SwingConstants.CENTER);
-                    cellPanel.add(label);
+                        // Add a label to make the panels visually distinct
+                        JLabel label = new JLabel(String.format("[%d, %d]", row, col), SwingConstants.CENTER);
+                        cellPanel.add(label);
 
-                    cellPanel.addMouseListener(new CellMouseListener(row, col));
-                    gridPanel.add(cellPanel);
+                        cellPanel.addMouseListener(new CellMouseListener(row, col, this));
+                        gridPanel.add(cellPanel);
+                    }
+                    else {
+                        JPanel cellPanel = new JPanel();
+                        cellPanel.setPreferredSize(new Dimension(35, 25)); // Adjust panel size as needed
+                        cellPanel.addMouseListener(new CellMouseListener(row, col, this));
+                        gridPanel.add(cellPanel);
+                    }
                 }
             }
 
-            frame.getContentPane().add(gridPanel, BorderLayout.CENTER);
+            frame.add(gridPanel, BorderLayout.CENTER);
             frame.pack();
             frame.setLocationRelativeTo(null); // Center the frame
             frame.setVisible(true);
@@ -80,15 +86,24 @@ public class GUIView implements GameView {
     public void updateBoardState(int row, int col, boolean isHit) {
         // Update GUI to reflect the state of a specific cell on the game board
     }
+    
+    public void show(){
+        if (frame != null) frame.setVisible(true);
+    }
+    public void hide(){
+        if (frame != null) frame.setVisible(false);
+    }
 
     // MouseListener for cell panels
     private class CellMouseListener extends MouseAdapter {
         private final int row;
         private final int col;
+        private GUIView currView;
 
-        public CellMouseListener(int row, int col) {
+        public CellMouseListener(int row, int col, GUIView currView) {
             this.row = row;
             this.col = col;
+            this.currView = currView;
         }
 
         @Override
@@ -107,7 +122,7 @@ public class GUIView implements GameView {
             // disable this cell (it is out of play)
             cellPanel.removeMouseListener(this);*/
             if (cellClickListener != null) {
-                cellClickListener.CellClick(row, col, (JPanel) e.getSource());
+                cellClickListener.CellClick(row, col, (JPanel) e.getSource(), currView);
             }
         }
     }

@@ -33,11 +33,12 @@ public class StartScreen {
                         cellButton.setPreferredSize(new Dimension(70, 70)); // Adjust button size as needed
                         cellButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
-                                System.out.println("play button clicked");
                                 //getting rid of start screen and making gameboard
                                 frame.dispose();
                                 GUIView guiView = new GUIView();
-                                GameController gameController = new GameController(guiView);
+                                GUIView guiView2 = new GUIView();
+                                GameController gameController = new GameController(guiView, guiView2);
+                                //hide guiView2
                                 //start the game loop
                                 gameController.startGame();
                             }
