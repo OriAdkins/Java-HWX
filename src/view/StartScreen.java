@@ -13,69 +13,68 @@ import java.net.URISyntaxException;
 import javax.swing.Icon; // interface used to manipulate images
 import javax.swing.ImageIcon; // loads images
 import control.GameController;
+
+
 public class StartScreen {
-    private static final int GRID_SIZE = 8; // Change this for a larger or smaller grid
     private JFrame frame;
 
-    public StartScreen(){
+    public StartScreen() {
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Battleship Game");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            JPanel gridPanel = new JPanel(new GridLayout(GRID_SIZE, 10));
+            // Load background image
+            ImageIcon backgroundImage = new ImageIcon(getClass().getResource("Battleship-WMS.png"));
 
-            for (int row = 0; row < GRID_SIZE; row++) {
-                for (int col = 0; col < 10; col++) {
-                    //add the play button
-                    if (row == 5 && col == 4){
-                        //Play
-                        JButton cellButton = new JButton("Play");
-                        cellButton.setPreferredSize(new Dimension(70, 70)); // Adjust button size as needed
-                        cellButton.addActionListener(new ActionListener() {
-                            public void actionPerformed(ActionEvent e) {
-                                //getting rid of start screen and making gameboard
-                                frame.dispose();
-                                GUIView guiView = new GUIView();
-                                GUIView guiView2 = new GUIView();
-                                GameController gameController = new GameController(guiView, guiView2);
-                                //start the game loop
-                                gameController.startGame();
-                            }
-                        });
-                        gridPanel.add(cellButton);
-                    }
-                    else if (row == 5 && col == 5){
-                        //Rules button
-                        JButton cellButton = new JButton("Rules");
-                        cellButton.setPreferredSize(new Dimension(70, 70)); // Adjust button size as needed
-                        cellButton.addActionListener(new ActionListener() {
-                            public void actionPerformed(ActionEvent e) {
-                                openWebpage("https://www.hasbro.com/common/instruct/battleship.pdf");
-                            }
-                        });
-                        gridPanel.add(cellButton);
-                    }
-                    else{
-                        Icon water = new ImageIcon( getClass().getResource( "water.jpg" ) );
-                        JLabel background = new JLabel(water);
-                        background.setPreferredSize(new Dimension(70, 70));
-                        gridPanel.add(background);
-                    }
-                }
-            }
+            // Create a layered pane
+            JLayeredPane layeredPane = new JLayeredPane();
+            layeredPane.setPreferredSize(new Dimension(backgroundImage.getIconWidth(), backgroundImage.getIconHeight()));
 
-            frame.getContentPane().add(gridPanel, BorderLayout.CENTER);
+            // Create a label for the background image
+            JLabel backgroundLabel = new JLabel(backgroundImage);
+            backgroundLabel.setBounds(0, 0, backgroundImage.getIconWidth(), backgroundImage.getIconHeight());
+            layeredPane.add(backgroundLabel, JLayeredPane.DEFAULT_LAYER);
+
+            // Create Play button
+            JButton playButton = new JButton("Play");
+            playButton.setBounds(50, 380, 80, 40);
+            playButton.addActionListener(this::playButtonClicked);
+            layeredPane.add(playButton, JLayeredPane.PALETTE_LAYER);
+
+            // Create Rules button
+            JButton rulesButton = new JButton("Rules");
+            rulesButton.setBounds(150, 380, 80, 40);
+            rulesButton.addActionListener(this::rulesButtonClicked);
+            layeredPane.add(rulesButton, JLayeredPane.PALETTE_LAYER);
+
+            // Set the frame's content pane to the layered pane
+            frame.setContentPane(layeredPane);
+
             frame.pack();
-            frame.setLocationRelativeTo(null); // Center the frame
+            frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
     }
-     //rules feature
+
+    private void playButtonClicked(ActionEvent e) {
+        frame.dispose();
+        GUIView guiView = new GUIView();
+        GUIView guiView2 = new GUIView();
+        GameController gameController = new GameController(guiView, guiView2);
+        guiView2.hide();
+        gameController.startGame();
+    }
+
+    private void rulesButtonClicked(ActionEvent e) {
+        openWebpage("https://www.hasbro.com/common/instruct/battleship.pdf");
+    }
+
+    // Rules feature
     private void openWebpage(String url) {
         try {
-            Desktop.getDesktop().browse(new URI(url)); //opening URL (obtained from URI object) in default web browser on user's desktop
+            Desktop.getDesktop().browse(new URI(url));
         } catch (IOException | URISyntaxException er) {
-            er.printStackTrace(); //must be in a try catch block to be exucuted
+            er.printStackTrace();
         }
     }
 }
