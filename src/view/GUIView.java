@@ -18,6 +18,7 @@ public class GUIView implements GameView {
     //array of the board, determines which panels are enemies
     boolean[][] enemies = new boolean[10][10];
     private CellClickListener cellClickListener;
+    private JPanel[][] cellPanels = new JPanel[21][10]; //new code: holds reference to cellPanels so I can change the state of any cellPanel
 
     public void setCellClickListener(CellClickListener listener) {
         this.cellClickListener = listener;
@@ -33,6 +34,7 @@ public class GUIView implements GameView {
             //setting border
             int topThickness = 10;
             int bottomThickness = 10;
+            boolean isBottom = false;
             rules.setBorder(BorderFactory.createMatteBorder(topThickness, 0, bottomThickness, 0, Color.BLACK));
             //when clicked, take the user to a rules page
             rules.addMouseListener(new MouseAdapter() {
@@ -48,13 +50,20 @@ public class GUIView implements GameView {
             for (int row = 0; row < 21; row++) {
                 for (int col = 0; col < GRID_SIZE; col++) {
                     if (row != 10){
+                        //row 10 is a blank set of JPanels used to divide the boards
                         JPanel cellPanel = new JPanel();
                         cellPanel.setPreferredSize(new Dimension(35, 25)); // Adjust panel size as needed
                         cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Add a border for visibility
+                        cellPanels[row][col] = cellPanel; //new code
 
                         // Add a label to make the panels visually distinct
+                        if (row > 10){
+                            row -= 11;
+                            isBottom = true;
+                        }
                         JLabel label = new JLabel(String.format("[%d, %d]", row, col), SwingConstants.CENTER);
                         cellPanel.add(label);
+                        if (isBottom) row += 11;
 
                         cellPanel.addMouseListener(new CellMouseListener(row, col, this));
                         gridPanel.add(cellPanel);
@@ -64,6 +73,7 @@ public class GUIView implements GameView {
                         cellPanel.setPreferredSize(new Dimension(35, 25)); // Adjust panel size as needed
                         cellPanel.addMouseListener(new CellMouseListener(row, col, this));
                         gridPanel.add(cellPanel);
+                        cellPanels[row][col] = cellPanel; //new code
                     }
                 }
             }
@@ -94,6 +104,10 @@ public class GUIView implements GameView {
         if (frame != null) frame.setVisible(false);
     }
 
+    public JPanel getPanel(int row, int col){
+        return cellPanels[row][col];
+    }
+
     // MouseListener for cell panels
     private class CellMouseListener extends MouseAdapter {
         private final int row;
@@ -108,19 +122,6 @@ public class GUIView implements GameView {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            /*for (int i = 0; i < 10; i++){
-                enemies[i][i] = true;
-            }
-            //testing to show which cell was clicked on.
-            System.out.println("Clicked on cell: " + row + ", " + col);
-
-            //if clicked cell is an enemy (hit), turn red. if not, turn grey
-            JPanel cellPanel = (JPanel) e.getSource();
-            if (enemies[row][col]) cellPanel.setBackground(Color.RED);
-            else cellPanel.setBackground(Color.GRAY);
-
-            // disable this cell (it is out of play)
-            cellPanel.removeMouseListener(this);*/
             if (cellClickListener != null) {
                 cellClickListener.CellClick(row, col, (JPanel) e.getSource(), currView);
             }

@@ -10,7 +10,6 @@
         // Create an instance of GUIView (or any other implementation of GameView)
         //GUIView guiView = new GUIView();
         StartScreen startScreen = new StartScreen();
- 
         // Create an instance of GameController and pass the view to it
         //GameController gameController = new GameController(guiView);
         

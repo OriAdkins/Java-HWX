@@ -38,7 +38,7 @@ public class StartScreen {
                                 GUIView guiView = new GUIView();
                                 GUIView guiView2 = new GUIView();
                                 GameController gameController = new GameController(guiView, guiView2);
-                                //hide guiView2
+                                guiView2.hide();
                                 //start the game loop
                                 gameController.startGame();
                             }

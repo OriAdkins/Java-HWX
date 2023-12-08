@@ -33,27 +33,45 @@ public class GameController implements CellClickListener { //providing implement
         if (turnActive){
             //panel has been clicked, it's player 1's turn...
             if (isP1){
-                //if that gridspace hasn't been hit yet...
-                if (!p2hits[row][col]){
-                //if clicked cell is an enemy (hit), turn red. if not, turn grey
-                    if (p2.isOccupied(row, col)){
-                        cellPanel.setBackground(Color.RED);
-                        p2hitCount++;
+                //if they clicked the correct grid (bottom)
+                if (row > 10){
+                    //get the panel of player 2's upper board
+                    row -= 11;
+                    JPanel myPanel = guiView.getPanel(row, col);
+                    //if that gridspace hasn't been hit yet...
+                    if (!p2hits[row][col]){
+                        //if clicked cell is an enemy (hit), turn red. if not, turn grey
+                        if (p2.isOccupied(row, col)){
+                            cellPanel.setBackground(Color.RED);
+                            p2hitCount++;
+                            myPanel.setBackground(Color.RED);
+                        }
+                        else{
+                            cellPanel.setBackground(Color.GRAY);
+                            myPanel.setBackground(Color.GRAY);
+                        }//lets fweaking go guys i got this feature
+                        p2hits[row][col] = true;
+                        isP1 = false;
                     }
-                    else cellPanel.setBackground(Color.GRAY);
-                    p2hits[row][col] = true;
-                    isP1 = false;
                 }
             }
             else {
-                if (!p1hits[row][col]){
-                    if (p1.isOccupied(row, col)){
-                        cellPanel.setBackground(Color.RED);
-                        p1hitCount++;
+                if (row > 10){
+                    row -= 11;
+                    JPanel myPanel = guiView2.getPanel(row, col);
+                    if (!p1hits[row][col]){
+                        if (p1.isOccupied(row, col)){
+                            cellPanel.setBackground(Color.RED);
+                            p1hitCount++;
+                            myPanel.setBackground(Color.RED);
+                        }
+                        else{
+                            cellPanel.setBackground(Color.GRAY);
+                            myPanel.setBackground(Color.GRAY);
+                        }
+                        p1hits[row][col] = true;
+                        isP1 = true;
                     }
-                    else cellPanel.setBackground(Color.GRAY);
-                    p1hits[row][col] = true;
-                    isP1 = true;
                 }
             }
             //creating a TimerTask object where updateView() is run inside run(), happens every .6 seconds
