@@ -1,6 +1,7 @@
 package control; // Adjust package as needed
 
 import view.*;
+import model.*;
 import javax.swing.*;
 import java.awt.Color;
 import java.util.Timer;
@@ -9,11 +10,13 @@ import java.util.TimerTask;
 public class GameController implements CellClickListener { //providing implementation for CellClickListener
     private GUIView guiView; //right now, is player 1's attack board; red = player 2's ships they've downed
     private GUIView guiView2;
+    private Ship selectedShip;
     //right now, both players occupy the same spaces on the board
     Player p1 = new Player();
     Player p2 = new Player();
     boolean[][] p1hits = new boolean[10][10];  //ships on player 1's board that player 2 has hit
     boolean[][] p2hits = new boolean[10][10];
+    private boolean isHorizontal;
     int p1hitCount = 0;
     int p2hitCount = 0;
     int iterations = 0;
@@ -85,8 +88,31 @@ public class GameController implements CellClickListener { //providing implement
         }
     }
 
+    private void placeShips(Player player) {
+        for (int i = 0; i < ShipType.values().length; i++) {
+            ShipType shipType = ShipType.values()[i];
+            Ship ship = new Ship(shipType);
+    
+            // Place ships with different starting positions
+            player.addShip(ship, i, i, true);
+    
+            // You might want to add logic to handle boundaries
+            if (i + ship.getSize() >= 10) {
+                break;  // Break if you've reached the board boundaries, adjust as needed
+            }
+        }
+    
+        // Update the view after placing all ships for the current player
+        updateView();
+    }
+    
+    
+
     public void startGame() {
         // Additional setup logic if needed
+
+        placeShips(p1);
+        placeShips(p2);
         playerTurn();
         //guiView.hide();
 
@@ -132,6 +158,18 @@ public class GameController implements CellClickListener { //providing implement
                 }
             }
         }
+
+        Player currentPlayer = isP1 ? p1 : p2;
+    GUIView currentView = isP1 ? guiView : guiView2;
+
+    for (int row = 0; row < 10; row++) {
+        for (int col = 0; col < 10; col++) {
+            if (currentPlayer.isOccupied(row, col)) {
+                JPanel cellPanel = currentView.getPanel(row, col);
+                if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
+            }
+        }
+    }
         // Update the view to reflect the current game state
         // This involves calling methods on the GameView interface
         System.out.println("turn switched");
@@ -156,7 +194,7 @@ public class GameController implements CellClickListener { //providing implement
     }
 
     private boolean isGameOver() {
-        if (p1hitCount == 10 || p2hitCount == 10){
+        if (p1hitCount == 17 || p2hitCount == 17){
             return true;
         }
         // Implement logic to check if the game is over
@@ -168,23 +206,5 @@ public class GameController implements CellClickListener { //providing implement
         // Implement logic to display the game-over state
         // This might include showing the winner, final statistics, etc.
         guiView.displayMessage("Game over! Player X wins!"); // Example message
-    }
-}
-
-class Player{
-    boolean[][] ships;
-    public Player(){
-        ships = new boolean[10][10];
-        //initializing ships, just for testing
-        for (int i = 0; i < 10; i++){
-            ships[i][i] = true;
-        }
-    }
-    public boolean isOccupied(int x, int y){
-        if (ships[x][y]) return true;
-        return false;
-    }
-    public void addShip(int x, int y){
-        ships[x][y] = true;
     }
 }

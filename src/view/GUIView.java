@@ -1,5 +1,8 @@
 package view;
 
+import model.Ship;
+import control.GameController;
+import model.Player;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,6 +17,8 @@ public class GUIView implements GameView {
     private static final int GRID_SIZE = 10; // Change this for a larger or smaller grid
 
     private JFrame frame;
+    // private Ship selectedShip;
+    // private Player currentPlayer;
     //should be 15 enemy spaces
     //array of the board, determines which panels are enemies
     boolean[][] enemies = new boolean[10][10];
