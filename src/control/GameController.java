@@ -3,9 +3,10 @@ package control; // Adjust package as needed
 import view.*;
 import model.*;
 import javax.swing.*;
-import java.awt.Color;
-import java.util.Timer;
+
 import java.util.TimerTask;
+import java.awt.*;  
+import java.awt.event.*;  
 
 public class GameController implements CellClickListener { //providing implementation for CellClickListener
     private GUIView guiView; //right now, is player 1's attack board; red = player 2's ships they've downed
@@ -22,13 +23,25 @@ public class GameController implements CellClickListener { //providing implement
     int iterations = 0;
     boolean isP1 = true;
     boolean turnActive = false;
-    private Timer timer = new Timer();
+    private Timer timer;
 
     public GameController(GUIView guiView, GUIView guiView2) {
         this.guiView = guiView; 
-        guiView.setCellClickListener(this); //makes GameController a CellClickListener
+        guiView.setCellClickListener(this);
         this.guiView2 = guiView2; 
         guiView2.setCellClickListener(this);
+
+        // Schedule the timer to update the view every second
+        timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Execute the updateView logic
+                updateView(isP1 ? p1 : p2, isP1 ? guiView2 : guiView);
+
+                // Stop the timer after the updateView logic has been executed
+                timer.stop();
+            }
+        });
     }
     //implementation
     @Override
@@ -81,121 +94,158 @@ public class GameController implements CellClickListener { //providing implement
                 }
             }
             //creating a TimerTask object where updateView() is run inside run(), happens every .6 seconds
-            timer.schedule(new TimerTask() {
-                public void run() {
-                    updateView();
-                }
-            }, 600);
-            turnActive = false;
+            if (isGameOver()) {
+                displayGameOver();
+            } else {
+                // Schedule the timer to update the view after 1 second
+                timer.start();
+            
+                turnActive = false; // Move this line here
+            }
         }
     }
 
-    private void placeShips(Player player) {
-        for (int i = 0; i < ShipType.values().length; i++) {
-            ShipType shipType = ShipType.values()[i];
+    private void placeShipsForPlayer(Player player, GUIView currentView) {
+        for (ShipType shipType : ShipType.values()) {
             Ship ship = new Ship(shipType);
-    
-            // Place ships with different starting positions
-            player.addShip(ship, i, i, true);
-    
-            // You might want to add logic to handle boundaries
-            if (i + ship.getSize() >= 10) {
-                break;  // Break if you've reached the board boundaries, adjust as needed
-            }
+
+            getUserInput(player, ship);
+            player.addShip(ship, ship.getPosition()[0][0], ship.getPosition()[0][1], ship.isHorizontal());
+            updateView(player, currentView);
         }
-    
-        // Update the view after placing all ships for the current player
-        updateView();
-    }
-    
-    
-
-    public void startGame() {
-        // Additional setup logic if needed
-
-        placeShips(p1);
-        placeShips(p2);
-        playerTurn();
-        //guiView.hide();
-
-        // Main game loop, commenting out now to run the game through the click event
-        /*while (!isGameOver()) {
-            // Perform player actions (e.g., handle turns, get input, update game state)
-            playerTurn();
-
-            // Additional game logic or checks
-
-            // Update the view to reflect the current game state
-            updateView();
-        }
-
-        // Game over logic (e.g., display winner, final statistics)
-        displayGameOver();*/
     }
 
-    private void playerTurn() {
-        // Implement logic for handling a player's turn
-        // This might include getting input from the player, updating the game state, etc.
-        turnActive = true;
+    private void updateView(Player currentPlayer, GUIView currentView) {
+        displayShips(currentPlayer, currentView);
+        updateBoard(currentPlayer, currentView);
+        
+        // Additional view switch logic
+        if (currentPlayer == p1 && isP1) {
+            guiView2.show();
+            guiView.hide();
+        } else if (currentPlayer == p2 && !isP1) {
+            guiView.show();
+            guiView2.hide();
+        }
     }
 
-    private void updateView() {
-        if (iterations == 0){
-            //display ships
-            for (int row = 0; row < 10; row++){
-                for (int col = 0; col < 10; col++){
-                    if (p1.isOccupied(row, col)){
-                        JPanel cellPanel = guiView2.getPanel(row, col);
-                        if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
-                    }
-                }
-            }
-            for (int row = 0; row < 10; row++){
-                for (int col = 0; col < 10; col++){
-                    if (p2.isOccupied(row, col)){
-                        JPanel cellPanel = guiView.getPanel(row, col);
-                        if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
-                    }
-                }
-            }
-        }
-
-        Player currentPlayer = isP1 ? p1 : p2;
-        GUIView currentView = isP1 ? guiView : guiView2;
-    
+    private void displayShips(Player currentPlayer, GUIView currentView) {
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
-                if (currentPlayer.isOccupied(row, col) && !p1hits[row][col] && !p2hits[row][col]){
+                JPanel cellPanel = currentView.getPanel(row, col);
+    
+                // Adjust the following line to use the correct view for the top board
+                JPanel topBoardCellPanel = guiView2.getPanel(row, col);
+    
+                // Check if the current cell is occupied by the player's ship
+                if (currentPlayer.isOccupied(row, col)) {
+                    // Display the player's ship on their own board
+                    if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
+                }
+    
+                // Check if the current cell has been hit by the opponent
+                if (topBoardCellPanel != null && p2hits[row][col]) {
+                    // Display the hit cell on the top board
+                    topBoardCellPanel.setBackground(Color.RED);
+                }
+            }
+        }
+    }
+
+    private void updateBoard(Player currentPlayer, GUIView currentView) {
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 10; col++) {
+                if (currentPlayer.isOccupied(row, col)) {
                     JPanel cellPanel = currentView.getPanel(row, col);
                     if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
                 }
             }
         }
-        // Update the view to reflect the current game state
-        // This involves calling methods on the GameView interface
-        if (isGameOver()){
-            timer.cancel();
-            guiView.getFrame().dispose();
-            guiView2.getFrame().dispose();
-            if (p1hitCount == 17){
-                Player2Win victory = new Player2Win();
-            }
-            else{
-                Player1Win victory = new Player1Win();
-            }
-        }
-        else if (isP1){
+    
+        System.out.println("turn switched");
+        if (isGameOver()) {
             guiView.hide();
-            guiView2.show();
-            playerTurn();
-        }
-        else if (!isP1){
             guiView2.hide();
-            guiView.show();
+            System.out.println("Game Over");
+        } else {
+            if (isP1) {
+                guiView2.show();
+                guiView.hide();
+            } else {
+                guiView.show();
+                guiView2.hide();
+            }
             playerTurn();
         }
-        iterations++;
-        // You might also call other methods on gameView to update the board state, etc.
+    
+        // Additional board update logic if needed
+    }
+
+    private void getUserInput(Player player, Ship ship) {
+    boolean validInput = false;
+
+    while (!validInput) {
+        try {
+            JPanel panel = new JPanel(new GridLayout(0, 1));
+
+            // Display ship information
+            panel.add(new JLabel("Placing " + ship.getType() + " (" + ship.getSize() + " spaces)"));
+
+            JTextField xField = new JTextField();
+            JTextField yField = new JTextField();
+            panel.add(new JLabel("Enter starting X coordinate (0-9):"));
+            panel.add(xField);
+            panel.add(new JLabel("Enter starting Y coordinate (0-9):"));
+            panel.add(yField);
+
+            String[] options = {"Vertical", "Horizontal"};
+            int rotationChoice = JOptionPane.showOptionDialog(
+                    null,
+                    panel,
+                    "Rotation",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    options,
+                    options[0]
+            );
+
+            boolean isHorizontal = (rotationChoice == 0);
+
+            int x = Integer.parseInt(xField.getText());
+            int y = Integer.parseInt(yField.getText());
+
+            if (player.isPlacementValid(ship, x, y, isHorizontal)) {
+                ship.rotate();
+                ship.setPosition(x, y);
+                validInput = true;
+            } else {
+                JOptionPane.showMessageDialog(null, "Invalid placement. Please choose a different location.");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Invalid input. Please enter a number.");
+        }
+    }
+}
+    public void startGame() {
+        // Place ships for both players
+        placeShipsForPlayer(p1, guiView2);
+
+        guiView.hide();
+        guiView2.show();
+
+        placeShipsForPlayer(p2, guiView);
+
+        
+
+        // Additional setup logic if needed
+
+        playerTurn();
+    }
+
+    private void playerTurn() {
+        turnActive = true;
+        System.out.println("playerTurn() ran");
     }
 
     private boolean isGameOver() {

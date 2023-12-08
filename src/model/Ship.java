@@ -38,8 +38,33 @@ public class Ship {
 
     // Getters and setters...
 
+    public void setPosition(int x, int y) {
+        // Update the position array based on x and y coordinates
+        position = new int[size][2]; // Reinitialize the position array
+    
+        if (isHorizontal) {
+            for (int i = 0; i < size; i++) {
+                position[i][0] = x + i;
+                position[i][1] = y;
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                position[i][0] = x;
+                position[i][1] = y + i;
+            }
+        }
+    }
+
     public int getSize(){
         return size;
+    }
+
+    public ShipType getType(){
+        return type;
+    }
+
+    public boolean isHorizontal(){
+        return isHorizontal;
     }
 
     public int[][] getPosition() {
