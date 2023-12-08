@@ -38,9 +38,10 @@ public class GameController implements CellClickListener { //providing implement
             //panel has been clicked, it's player 1's turn...
             if (isP1){
                 //if they clicked the correct grid (bottom)
-                if (row > 10){
+                guiView2.getFrame().setTitle("Player 1"); //changes name of frame to player 1
+                if (row > 11){
                     //get the panel of player 2's upper board
-                    row -= 11;
+                    row -= 12;
                     JPanel myPanel = guiView.getPanel(row, col);
                     //if that gridspace hasn't been hit yet...
                     if (!p2hits[row][col]){
@@ -60,8 +61,9 @@ public class GameController implements CellClickListener { //providing implement
                 }
             }
             else {
-                if (row > 10){
-                    row -= 11;
+                guiView.getFrame().setTitle("Player 2");
+                if (row > 11){
+                    row -= 12;
                     JPanel myPanel = guiView2.getPanel(row, col);
                     if (!p1hits[row][col]){
                         if (p1.isOccupied(row, col)){
@@ -160,24 +162,41 @@ public class GameController implements CellClickListener { //providing implement
         }
 
         Player currentPlayer = isP1 ? p1 : p2;
-    GUIView currentView = isP1 ? guiView : guiView2;
-
-    for (int row = 0; row < 10; row++) {
-        for (int col = 0; col < 10; col++) {
-            if (currentPlayer.isOccupied(row, col)) {
-                JPanel cellPanel = currentView.getPanel(row, col);
-                if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
+        GUIView currentView = isP1 ? guiView : guiView2;
+    
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 10; col++) {
+                if (currentPlayer.isOccupied(row, col) && !p1hits[row][col] && !p2hits[row][col]){
+                    JPanel cellPanel = currentView.getPanel(row, col);
+                    if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
+                }
             }
         }
-    }
+        /*if (currentPlayer.isOccupied(row, col)){
+                if (!p1hits[row][col] && !p2hits[row][col]){
+                    JPanel cellPanel = currentView.getPanel(row, col);
+                    if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
+                }
+                else{
+                    JPanel cellPanel = currentView.getPanel(row, col);
+                    if (cellPanel != null) cellPanel.setBackground(Color.RED);
+                }
+                }*/
         // Update the view to reflect the current game state
         // This involves calling methods on the GameView interface
         System.out.println("turn switched");
         if (isGameOver()){
             timer.cancel();
-            guiView.hide();
-            guiView2.hide();
-            System.out.println("Game Over");
+            guiView.getFrame().dispose();
+            guiView2.getFrame().dispose();
+            if (p1hitCount == 17){
+                //logic
+                System.out.println("Player 2 wins");
+            }
+            else{
+                //logic
+                System.out.println("Player 1 wins");
+            }
         }
         else if (isP1){
             guiView.hide();

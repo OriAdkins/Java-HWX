@@ -40,7 +40,7 @@ public class GUIView implements GameView {
             int topThickness = 10;
             int bottomThickness = 10;
             boolean isBottom = false;
-            rules.setBorder(BorderFactory.createMatteBorder(topThickness, 0, bottomThickness, 0, Color.BLACK));
+            //rules.setBorder(BorderFactory.createMatteBorder(topThickness, 0, bottomThickness, 0, Color.BLACK));
             //when clicked, take the user to a rules page
             rules.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -50,35 +50,93 @@ public class GUIView implements GameView {
             });
             frame.add(rules, BorderLayout.NORTH);
 
-            JPanel gridPanel = new JPanel(new GridLayout(21, GRID_SIZE));
+            JPanel gridPanel = new JPanel(new GridLayout(22, GRID_SIZE));
             //creating the top board (player's board, shows your ships)
-            for (int row = 0; row < 21; row++) {
+            for (int row = 0; row < 22; row++) {
                 for (int col = 0; col < GRID_SIZE; col++) {
-                    if (row != 10){
-                        //row 10 is a blank set of JPanels used to divide the boards
+                    if (row != 11 && row != 0){
+                        //row 12 is a blank set of JPanels used to divide the boards
                         JPanel cellPanel = new JPanel();
                         cellPanel.setPreferredSize(new Dimension(35, 25)); // Adjust panel size as needed
                         cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Add a border for visibility
-                        cellPanels[row][col] = cellPanel; //new code
+                        cellPanels[row-1][col] = cellPanel; //store all JPanels except for the ones that represent the dividers between the boards
 
                         // Add a label to make the panels visually distinct
-                        if (row > 10){
-                            row -= 11;
+                        if (row > 11){
+                            row -= 12;
                             isBottom = true;
+                        }
+                        else{
+                            row -= 1;
+                            isBottom = false;
                         }
                         JLabel label = new JLabel(String.format("[%d, %d]", row, col), SwingConstants.CENTER);
                         cellPanel.add(label);
-                        if (isBottom) row += 11;
+                        if (isBottom) row += 12;
+                        else row += 1;
 
                         cellPanel.addMouseListener(new CellMouseListener(row, col, this));
                         gridPanel.add(cellPanel);
                     }
                     else {
-                        JPanel cellPanel = new JPanel();
-                        cellPanel.setPreferredSize(new Dimension(35, 25)); // Adjust panel size as needed
-                        cellPanel.addMouseListener(new CellMouseListener(row, col, this));
-                        gridPanel.add(cellPanel);
-                        cellPanels[row][col] = cellPanel; //new code
+                        //create the bottom label "Your Hits"
+                        if (row == 11){
+                        if (col == 4){
+                            JPanel cellPanel = new JPanel();
+                            cellPanel.setPreferredSize(new Dimension(30, 20));
+                            JLabel your = new JLabel("Your", SwingConstants.RIGHT);
+                            cellPanel.setBorder(BorderFactory.createMatteBorder(5, 0, 3, 0, Color.BLACK)); //border with top of 5, bottom of 3
+                            cellPanel.setLayout(new BoxLayout(cellPanel, BoxLayout.Y_AXIS)); //arranging cellPanel vertically
+                            cellPanel.add(your);
+                            cellPanel.add(Box.createVerticalStrut(6)); //creates a vertical space of 6 under the JLabel, pushing it up
+                            gridPanel.add(cellPanel);
+                        }
+                        else if (col == 5){
+                            JPanel cellPanel = new JPanel();
+                            cellPanel.setPreferredSize(new Dimension(30, 20));
+                            JLabel hits = new JLabel("Hits", SwingConstants.RIGHT);
+                            cellPanel.setBorder(BorderFactory.createMatteBorder(5, 0, 3, 0, Color.BLACK));
+                            cellPanel.setLayout(new BoxLayout(cellPanel, BoxLayout.Y_AXIS));
+                            cellPanel.add(hits);
+                            cellPanel.add(Box.createVerticalStrut(6));
+                            gridPanel.add(cellPanel);
+                        }
+                        else{
+                            JPanel cellPanel = new JPanel();
+                            cellPanel.setPreferredSize(new Dimension(30, 20));
+                            cellPanel.setBackground(Color.BLACK);
+                            gridPanel.add(cellPanel);
+                        }
+                        }
+                        else {
+                            //if row == 0, create the top label for player board
+                            if (col == 4){
+                                JPanel cellPanel = new JPanel();
+                                cellPanel.setPreferredSize(new Dimension(30, 20));
+                                JLabel your = new JLabel("Your", SwingConstants.RIGHT);
+                                cellPanel.setBorder(BorderFactory.createMatteBorder(5, 0, 3, 0, Color.BLACK));
+                                cellPanel.setLayout(new BoxLayout(cellPanel, BoxLayout.Y_AXIS));
+                                cellPanel.add(your);
+                                cellPanel.add(Box.createVerticalStrut(6));
+                                gridPanel.add(cellPanel);
+                            }
+                            else if (col == 5){
+                                JPanel cellPanel = new JPanel();
+                                cellPanel.setPreferredSize(new Dimension(30, 20));
+                                JLabel Ships = new JLabel("Ships", SwingConstants.RIGHT);
+                                cellPanel.setBorder(BorderFactory.createMatteBorder(5, 0, 3, 0, Color.BLACK));
+                                cellPanel.setLayout(new BoxLayout(cellPanel, BoxLayout.Y_AXIS));
+                                cellPanel.add(Ships);
+                                cellPanel.add(Box.createVerticalStrut(6));
+                                gridPanel.add(cellPanel);
+                            }
+                            else{
+                                JPanel cellPanel = new JPanel();
+                                cellPanel.setPreferredSize(new Dimension(30, 20));
+                                cellPanel.setBackground(Color.BLACK);
+                                gridPanel.add(cellPanel);
+                            }
+                        }
                     }
                 }
             }
@@ -88,6 +146,10 @@ public class GUIView implements GameView {
             frame.setLocationRelativeTo(null); // Center the frame
             frame.setVisible(true);
         });
+    }
+
+    public JFrame getFrame(){
+        return frame;
     }
 
     // Implement methods from GameView interface to update the display based on game state
