@@ -16,6 +16,7 @@ public class GameController implements CellClickListener { //providing implement
     boolean[][] p2hits = new boolean[10][10];
     int p1hitCount = 0;
     int p2hitCount = 0;
+    int iterations = 0;
     boolean isP1 = true;
     boolean turnActive = false;
     private Timer timer = new Timer();
@@ -49,7 +50,7 @@ public class GameController implements CellClickListener { //providing implement
                         else{
                             cellPanel.setBackground(Color.GRAY);
                             myPanel.setBackground(Color.GRAY);
-                        }//lets fweaking go guys i got this feature
+                        }
                         p2hits[row][col] = true;
                         isP1 = false;
                     }
@@ -87,6 +88,7 @@ public class GameController implements CellClickListener { //providing implement
     public void startGame() {
         // Additional setup logic if needed
         playerTurn();
+        //guiView.hide();
 
         // Main game loop, commenting out now to run the game through the click event
         /*while (!isGameOver()) {
@@ -111,6 +113,25 @@ public class GameController implements CellClickListener { //providing implement
     }
 
     private void updateView() {
+        if (iterations == 0){
+            //display ships
+            for (int row = 0; row < 10; row++){
+                for (int col = 0; col < 10; col++){
+                    if (p1.isOccupied(row, col)){
+                        JPanel cellPanel = guiView2.getPanel(row, col);
+                        if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
+                    }
+                }
+            }
+            for (int row = 0; row < 10; row++){
+                for (int col = 0; col < 10; col++){
+                    if (p2.isOccupied(row, col)){
+                        JPanel cellPanel = guiView.getPanel(row, col);
+                        if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
+                    }
+                }
+            }
+        }
         // Update the view to reflect the current game state
         // This involves calling methods on the GameView interface
         System.out.println("turn switched");
@@ -130,6 +151,7 @@ public class GameController implements CellClickListener { //providing implement
             guiView.show();
             playerTurn();
         }
+        iterations++;
         // You might also call other methods on gameView to update the board state, etc.
     }
 
