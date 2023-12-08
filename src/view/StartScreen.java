@@ -57,12 +57,21 @@ public class StartScreen {
     }
 
     private void playButtonClicked(ActionEvent e) {
-        frame.dispose();
+        SwingUtilities.invokeLater(() -> {
+        frame.dispose(); // Close the start screen
+
         GUIView guiView = new GUIView();
         GUIView guiView2 = new GUIView();
         GameController gameController = new GameController(guiView, guiView2);
-        guiView2.hide();
+
+        // Ensure visibility changes happen after GUIs are fully initialized
+        SwingUtilities.invokeLater(() -> {
+            guiView2.show(); // Show the first GUIView
+            guiView.hide(); // Hide the second GUIView
+        });
+
         gameController.startGame();
+    });
     }
 
     private void rulesButtonClicked(ActionEvent e) {
