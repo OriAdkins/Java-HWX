@@ -137,7 +137,6 @@ public class GameController implements CellClickListener { //providing implement
         // Implement logic for handling a player's turn
         // This might include getting input from the player, updating the game state, etc.
         turnActive = true;
-        System.out.println("playerTurn() ran");
     }
 
     private void updateView() {
@@ -172,30 +171,17 @@ public class GameController implements CellClickListener { //providing implement
                 }
             }
         }
-        /*if (currentPlayer.isOccupied(row, col)){
-                if (!p1hits[row][col] && !p2hits[row][col]){
-                    JPanel cellPanel = currentView.getPanel(row, col);
-                    if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
-                }
-                else{
-                    JPanel cellPanel = currentView.getPanel(row, col);
-                    if (cellPanel != null) cellPanel.setBackground(Color.RED);
-                }
-                }*/
         // Update the view to reflect the current game state
         // This involves calling methods on the GameView interface
-        System.out.println("turn switched");
         if (isGameOver()){
             timer.cancel();
             guiView.getFrame().dispose();
             guiView2.getFrame().dispose();
             if (p1hitCount == 17){
-                //logic
-                System.out.println("Player 2 wins");
+                Player2Win victory = new Player2Win();
             }
             else{
-                //logic
-                System.out.println("Player 1 wins");
+                Player1Win victory = new Player1Win();
             }
         }
         else if (isP1){
