@@ -95,7 +95,15 @@ public class GameController implements CellClickListener { //providing implement
             }
             //update based on timer
             if (isGameOver()) {
-                displayGameOver();
+                guiView.getFrame().dispose();
+                guiView2.getFrame().dispose();
+            if (p1hitCount == 17){ //hit count is for your own board (hits totaled), if you reach 17 you lose
+                Player2Win victory = new Player2Win();
+            }
+            else {
+                Player1Win victory = new Player1Win();
+            }
+            System.out.println("Game Over");
             } else {
                 // Schedule the timer to update the view after 1 second
                 timer.start();
@@ -174,26 +182,7 @@ public class GameController implements CellClickListener { //providing implement
         }
 
         //turn logic
-    
-        if (isGameOver()) {
-            guiView.getFrame().dispose();
-            guiView2.getFrame().dispose();
-            if (p1hitCount == 17){ //hit count is for your own board (hits totaled), if you reach 17 you lose
-                Player2Win victory = new Player2Win();
-            }else if(p2hitCount == 17){ Player1Win victory = new Player1Win(); }
-            System.out.println("Game Over");
-        } else {
-            if (isP1) {
-                guiView2.show();
-                guiView.hide();
-            } else {
-                guiView.show();
-                guiView2.hide();
-            }
-            playerTurn();
-        }
-    
-
+        playerTurn();
     }
 
     //function to ask for user input for ship placement
