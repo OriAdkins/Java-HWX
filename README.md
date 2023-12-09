@@ -17,6 +17,10 @@ Implemented with a JLayeredPane that allows for the buttons to be placed near th
 
 The user is displayed a simple screen (JDialog and Buttons) to place ships, once they are done placing ships they begin the battle. The first player to sink all ships wins.
 
+# Rules
+
+On the start screen, there is a rules button that takes the user to a page displaying the rules. The rules page may also be accessed on the label near the top of the board screen that reads "Click here to see the rules".
+
 # Issues
 
 There are a couple bugs in this program, first and foremost it is missing the ability to rotate ships horizontally. This is unfortunate, but ship rotation ended up being a challenge for
