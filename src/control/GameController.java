@@ -159,26 +159,6 @@ public class GameController implements CellClickListener { //providing implement
                 }
             }
         }
-        /*for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 10; col++) {
-                JPanel cellPanel = currentView.getPanel(row, col);
-    
-                // Adjust the following line to use the correct view for the top board
-                JPanel topBoardCellPanel = guiView2.getPanel(row, col);
-    
-                // Check if the current cell is occupied by the player's ship
-                if (currentPlayer.isOccupied(row, col)) {
-                    // Display the player's ship on their own board
-                    if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
-                }
-    
-                // Check if the current cell has been hit by the opponent
-                if (topBoardCellPanel != null && p2hits[row][col]) {
-                    // Display the hit cell on the top board
-                    topBoardCellPanel.setBackground(Color.RED);
-                }
-            }
-        }*/
     }
 
     private void updateBoard(Player currentPlayer, GUIView currentView) {
@@ -282,14 +262,10 @@ public class GameController implements CellClickListener { //providing implement
         if (p1hitCount == 17 || p2hitCount == 17){
             return true;
         }
-        // Implement logic to check if the game is over
-        // This might involve checking win conditions, reaching a certain turn limit, etc.
-        return false; // Placeholder; replace with actual game-over logic
+        return false;
     }
 
     private void displayGameOver() {
-        // Implement logic to display the game-over state
-        // This might include showing the winner, final statistics, etc.
         guiView.displayMessage("Game over! Player X wins!"); // Example message
     }
 }

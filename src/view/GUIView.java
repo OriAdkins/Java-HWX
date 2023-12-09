@@ -59,7 +59,8 @@ public class GUIView implements GameView {
                         //row 12 is a blank set of JPanels used to divide the boards
                         JPanel cellPanel = new JPanel();
                         cellPanel.setPreferredSize(new Dimension(40, 25)); // Adjust panel size as needed
-                        cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Add a border for visibility
+                        cellPanel.setBackground(Color.BLACK);
+                        cellPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN)); // Add a border for visibility
                         cellPanels[row-1][col] = cellPanel; //store all JPanels except for the ones that represent the dividers between the boards
 
                         // Add a label to make the panels visually distinct
@@ -72,6 +73,7 @@ public class GUIView implements GameView {
                             isBottom = false;
                         }
                         JLabel label = new JLabel(String.format("[%d, %d]", row, col), SwingConstants.CENTER);
+                        label.setForeground(Color.WHITE);
                         cellPanel.add(label);
                         if (isBottom) row += 12;
                         else row += 1;
@@ -85,30 +87,27 @@ public class GUIView implements GameView {
                         if (col == 4){
                             JPanel cellPanel = new JPanel();
                             cellPanel.setPreferredSize(new Dimension(30, 20));
-                            JLabel your = new JLabel("Your", SwingConstants.RIGHT);
-                            cellPanel.setBorder(BorderFactory.createMatteBorder(5, 3, 3, 0, Color.BLACK)); //border with top of 5, bottom of 3
-                            cellPanel.setLayout(new BoxLayout(cellPanel, BoxLayout.Y_AXIS)); //arranging cellPanel vertically
+                            cellPanel.setBackground(Color.BLACK);
+                            JLabel your = new JLabel("YOUR", SwingConstants.CENTER);
+                            your.setBackground(Color.BLACK);
+                            your.setForeground(Color.GREEN);
                             cellPanel.add(your);
-                            cellPanel.add(Box.createVerticalStrut(6)); //creates a vertical space of 6 under the JLabel, pushing it up
                             gridPanel.add(cellPanel);
                         }
                         else if (col == 5){
                             JPanel cellPanel = new JPanel();
                             cellPanel.setPreferredSize(new Dimension(30, 20));
-                            JLabel hits = new JLabel("Hits", SwingConstants.RIGHT);
-                            cellPanel.setBorder(BorderFactory.createMatteBorder(5, 0, 3, 3, Color.BLACK));
-                            cellPanel.setLayout(new BoxLayout(cellPanel, BoxLayout.Y_AXIS));
+                            cellPanel.setBackground(Color.BLACK);
+                            JLabel hits = new JLabel("HITS", SwingConstants.CENTER);
+                            hits.setBackground(Color.BLACK);
+                            hits.setForeground(Color.GREEN);
                             cellPanel.add(hits);
-                            cellPanel.add(Box.createVerticalStrut(6));
                             gridPanel.add(cellPanel);
                         }
                         else{
                             JPanel cellPanel = new JPanel();
                             cellPanel.setPreferredSize(new Dimension(30, 20));
                             cellPanel.setBackground(Color.BLACK);
-                            Icon cannon = new ImageIcon( getClass().getResource( "metal.jpg" ) );
-                            JLabel cannonLabel = new JLabel( cannon, SwingConstants.CENTER );
-                            cellPanel.add( cannonLabel );
                             gridPanel.add(cellPanel);
                         }
                         }
@@ -117,30 +116,27 @@ public class GUIView implements GameView {
                             if (col == 4){
                                 JPanel cellPanel = new JPanel();
                                 cellPanel.setPreferredSize(new Dimension(30, 20));
-                                JLabel your = new JLabel("Your", SwingConstants.RIGHT);
-                                cellPanel.setBorder(BorderFactory.createMatteBorder(5, 3, 3, 0, Color.BLACK));
-                                cellPanel.setLayout(new BoxLayout(cellPanel, BoxLayout.Y_AXIS));
+                                cellPanel.setBackground(Color.BLACK);
+                                JLabel your = new JLabel("YOUR", SwingConstants.CENTER);
+                                your.setBackground(Color.BLACK);
+                                your.setForeground(Color.GREEN);
                                 cellPanel.add(your);
-                                cellPanel.add(Box.createVerticalStrut(6));
                                 gridPanel.add(cellPanel);
                             }
                             else if (col == 5){
                                 JPanel cellPanel = new JPanel();
                                 cellPanel.setPreferredSize(new Dimension(30, 20));
-                                JLabel Ships = new JLabel("Ships", SwingConstants.RIGHT);
-                                cellPanel.setBorder(BorderFactory.createMatteBorder(5, 0, 3, 3, Color.BLACK));
-                                cellPanel.setLayout(new BoxLayout(cellPanel, BoxLayout.Y_AXIS));
+                                cellPanel.setBackground(Color.BLACK);
+                                JLabel Ships = new JLabel("SHIPS", SwingConstants.CENTER);
+                                Ships.setBackground(Color.BLACK);
+                                Ships.setForeground(Color.GREEN);
                                 cellPanel.add(Ships);
-                                cellPanel.add(Box.createVerticalStrut(6));
                                 gridPanel.add(cellPanel);
                             }
                             else{
                                 JPanel cellPanel = new JPanel();
                                 cellPanel.setPreferredSize(new Dimension(30, 20));
                                 cellPanel.setBackground(Color.BLACK);
-                                Icon cannon = new ImageIcon( getClass().getResource( "metal.jpg" ) );
-                                JLabel cannonLabel = new JLabel( cannon, SwingConstants.CENTER );
-                                cellPanel.add( cannonLabel );
                                 gridPanel.add(cellPanel);
                             }
                         }
