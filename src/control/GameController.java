@@ -7,12 +7,13 @@ import javax.swing.*;
 import java.util.TimerTask;
 import java.awt.*;  
 import java.awt.event.*;  
-
+//bugs: player 1 board- the hits on the bottom are also displayed on the top board. misses on the bottom are displayed as hits on top. Misses from player 2 are displayed on top board for player 1
+//player 2 board: player 1's misses are sometimes displayed as hits on p2's top board
+//ships overwrite hits
 public class GameController implements CellClickListener { //providing implementation for CellClickListener
     private GUIView guiView; //right now, is player 1's attack board; red = player 2's ships they've downed
     private GUIView guiView2;
     private Ship selectedShip;
-    //right now, both players occupy the same spaces on the board
     Player p1 = new Player();
     Player p2 = new Player();
     boolean[][] p1hits = new boolean[10][10];  //ships on player 1's board that player 2 has hit
@@ -43,15 +44,15 @@ public class GameController implements CellClickListener { //providing implement
             }
         });
     }
-    //implementation
+    //implementation, responds to a click on the player's hit board and updates the other player's ship board
     @Override
     public void CellClick(int row, int col, JPanel cellPanel, GUIView currView) {
         //only listen for clicks once the game has started
         if (turnActive){
             //panel has been clicked, it's player 1's turn...
             if (isP1){
-                //if they clicked the correct grid (bottom)
                 guiView2.getFrame().setTitle("Player 1"); //changes name of frame to player 1
+                //if they clicked the correct grid (bottom)
                 if (row > 11){
                     //get the panel of player 2's upper board
                     row -= 12;
@@ -60,7 +61,7 @@ public class GameController implements CellClickListener { //providing implement
                     if (!p2hits[row][col]){
                         //if clicked cell is an enemy (hit), turn red. if not, turn grey
                         if (p2.isOccupied(row, col)){
-                            cellPanel.setBackground(Color.RED);
+                            cellPanel.setBackground(Color.RED); //the panel clicked
                             p2hitCount++;
                             myPanel.setBackground(Color.RED);
                         }
@@ -130,7 +131,35 @@ public class GameController implements CellClickListener { //providing implement
     }
 
     private void displayShips(Player currentPlayer, GUIView currentView) {
+        //top grid of currentView
         for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 10; col++) {
+                JPanel cellPanel = currentView.getPanel(row, col); //top panel of currentView
+    
+                // Check if the current cell is occupied by the player's ship
+                if (currentPlayer.isOccupied(row, col)) {
+                    if (currentView == guiView2){ //player 1 board
+                        // Check if the current cell has been hit by the opponent
+                        if (cellPanel != null && p1hits[row][col]) {
+                            // Display the hit cell on the top board
+                            cellPanel.setBackground(Color.RED);
+                        }
+                        // Display the player's ship on their own board
+                        else if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
+                    }
+                    else{
+                        // Check if the current cell has been hit by the opponent
+                        if (cellPanel != null && p2hits[row][col]) {
+                            // Display the hit cell on the top board
+                            cellPanel.setBackground(Color.RED);
+                        }
+                        // Display the player's ship on their own board
+                        else if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
+                    }
+                }
+            }
+        }
+        /*for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 JPanel cellPanel = currentView.getPanel(row, col);
     
@@ -149,7 +178,7 @@ public class GameController implements CellClickListener { //providing implement
                     topBoardCellPanel.setBackground(Color.RED);
                 }
             }
-        }
+        }*/
     }
 
     private void updateBoard(Player currentPlayer, GUIView currentView) {
@@ -157,12 +186,14 @@ public class GameController implements CellClickListener { //providing implement
             for (int col = 0; col < 10; col++) {
                 if (currentPlayer.isOccupied(row, col)) {
                     JPanel cellPanel = currentView.getPanel(row, col);
-                    if (cellPanel != null) cellPanel.setBackground(Color.BLUE);
+                    if (cellPanel != null){
+                        if (currentView == guiView2 && !p1hits[row][col]) cellPanel.setBackground(Color.BLUE);
+                        else if (currentView == guiView && !p2hits[row][col]) cellPanel.setBackground(Color.BLUE);
+                    }
                 }
             }
         }
     
-        System.out.println("turn switched");
         if (isGameOver()) {
             guiView.hide();
             guiView2.hide();
@@ -245,7 +276,6 @@ public class GameController implements CellClickListener { //providing implement
 
     private void playerTurn() {
         turnActive = true;
-        System.out.println("playerTurn() ran");
     }
 
     private boolean isGameOver() {

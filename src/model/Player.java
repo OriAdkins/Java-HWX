@@ -6,10 +6,6 @@ public class Player{
     public Player(){
         this.ships = new boolean[10][10];
         this.shipPlacements = new boolean[10][10];
-        //initializing ships, just for testing
-        // for (int i = 0; i < 10; i++){
-        //     ships[i][i] = true;
-        // }
     }
     public boolean isOccupied(int x, int y){
         if (ships[x][y]) return true;

@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import javax.swing.ImageIcon;
 
 public class GUIView implements GameView {
     private static final int GRID_SIZE = 10; // Change this for a larger or smaller grid
@@ -23,7 +24,7 @@ public class GUIView implements GameView {
     //array of the board, determines which panels are enemies
     boolean[][] enemies = new boolean[10][10];
     private CellClickListener cellClickListener;
-    private JPanel[][] cellPanels = new JPanel[21][10]; //new code: holds reference to cellPanels so I can change the state of any cellPanel
+    private JPanel[][] cellPanels = new JPanel[21][10]; //holds reference to cellPanels so I can change the state of any cellPanel
 
     public void setCellClickListener(CellClickListener listener) {
         this.cellClickListener = listener;
@@ -37,8 +38,8 @@ public class GUIView implements GameView {
             //rules feature
             JLabel rules = new JLabel("Click here to see the rules", SwingConstants.CENTER);
             //setting border
-            int topThickness = 10;
-            int bottomThickness = 10;
+            //int topThickness = 10;
+            //int bottomThickness = 10;
             boolean isBottom = false;
             //rules.setBorder(BorderFactory.createMatteBorder(topThickness, 0, bottomThickness, 0, Color.BLACK));
             //when clicked, take the user to a rules page
@@ -57,7 +58,7 @@ public class GUIView implements GameView {
                     if (row != 11 && row != 0){
                         //row 12 is a blank set of JPanels used to divide the boards
                         JPanel cellPanel = new JPanel();
-                        cellPanel.setPreferredSize(new Dimension(35, 25)); // Adjust panel size as needed
+                        cellPanel.setPreferredSize(new Dimension(40, 25)); // Adjust panel size as needed
                         cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Add a border for visibility
                         cellPanels[row-1][col] = cellPanel; //store all JPanels except for the ones that represent the dividers between the boards
 
@@ -85,7 +86,7 @@ public class GUIView implements GameView {
                             JPanel cellPanel = new JPanel();
                             cellPanel.setPreferredSize(new Dimension(30, 20));
                             JLabel your = new JLabel("Your", SwingConstants.RIGHT);
-                            cellPanel.setBorder(BorderFactory.createMatteBorder(5, 0, 3, 0, Color.BLACK)); //border with top of 5, bottom of 3
+                            cellPanel.setBorder(BorderFactory.createMatteBorder(5, 3, 3, 0, Color.BLACK)); //border with top of 5, bottom of 3
                             cellPanel.setLayout(new BoxLayout(cellPanel, BoxLayout.Y_AXIS)); //arranging cellPanel vertically
                             cellPanel.add(your);
                             cellPanel.add(Box.createVerticalStrut(6)); //creates a vertical space of 6 under the JLabel, pushing it up
@@ -95,7 +96,7 @@ public class GUIView implements GameView {
                             JPanel cellPanel = new JPanel();
                             cellPanel.setPreferredSize(new Dimension(30, 20));
                             JLabel hits = new JLabel("Hits", SwingConstants.RIGHT);
-                            cellPanel.setBorder(BorderFactory.createMatteBorder(5, 0, 3, 0, Color.BLACK));
+                            cellPanel.setBorder(BorderFactory.createMatteBorder(5, 0, 3, 3, Color.BLACK));
                             cellPanel.setLayout(new BoxLayout(cellPanel, BoxLayout.Y_AXIS));
                             cellPanel.add(hits);
                             cellPanel.add(Box.createVerticalStrut(6));
@@ -105,6 +106,9 @@ public class GUIView implements GameView {
                             JPanel cellPanel = new JPanel();
                             cellPanel.setPreferredSize(new Dimension(30, 20));
                             cellPanel.setBackground(Color.BLACK);
+                            Icon cannon = new ImageIcon( getClass().getResource( "metal.jpg" ) );
+                            JLabel cannonLabel = new JLabel( cannon, SwingConstants.CENTER );
+                            cellPanel.add( cannonLabel );
                             gridPanel.add(cellPanel);
                         }
                         }
@@ -114,7 +118,7 @@ public class GUIView implements GameView {
                                 JPanel cellPanel = new JPanel();
                                 cellPanel.setPreferredSize(new Dimension(30, 20));
                                 JLabel your = new JLabel("Your", SwingConstants.RIGHT);
-                                cellPanel.setBorder(BorderFactory.createMatteBorder(5, 0, 3, 0, Color.BLACK));
+                                cellPanel.setBorder(BorderFactory.createMatteBorder(5, 3, 3, 0, Color.BLACK));
                                 cellPanel.setLayout(new BoxLayout(cellPanel, BoxLayout.Y_AXIS));
                                 cellPanel.add(your);
                                 cellPanel.add(Box.createVerticalStrut(6));
@@ -124,7 +128,7 @@ public class GUIView implements GameView {
                                 JPanel cellPanel = new JPanel();
                                 cellPanel.setPreferredSize(new Dimension(30, 20));
                                 JLabel Ships = new JLabel("Ships", SwingConstants.RIGHT);
-                                cellPanel.setBorder(BorderFactory.createMatteBorder(5, 0, 3, 0, Color.BLACK));
+                                cellPanel.setBorder(BorderFactory.createMatteBorder(5, 0, 3, 3, Color.BLACK));
                                 cellPanel.setLayout(new BoxLayout(cellPanel, BoxLayout.Y_AXIS));
                                 cellPanel.add(Ships);
                                 cellPanel.add(Box.createVerticalStrut(6));
@@ -134,6 +138,9 @@ public class GUIView implements GameView {
                                 JPanel cellPanel = new JPanel();
                                 cellPanel.setPreferredSize(new Dimension(30, 20));
                                 cellPanel.setBackground(Color.BLACK);
+                                Icon cannon = new ImageIcon( getClass().getResource( "metal.jpg" ) );
+                                JLabel cannonLabel = new JLabel( cannon, SwingConstants.CENTER );
+                                cellPanel.add( cannonLabel );
                                 gridPanel.add(cellPanel);
                             }
                         }
