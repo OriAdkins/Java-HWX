@@ -32,20 +32,19 @@ public class GameController implements CellClickListener { //providing implement
         this.guiView2 = guiView2; 
         guiView2.setCellClickListener(this);
 
-        // Schedule the timer to update the view every second
+        //schedule the timer to update the view every second
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Execute the updateView logic
+                //execute the updateView logic
                 updateView(isP1 ? p1 : p2, isP1 ? guiView2 : guiView);
 
-                // Stop the timer after the updateView logic has been executed
+                //stop the timer after the updateView logic has been executed
                 timer.stop();
             }
         });
     }
     //implementation, responds to a click on the player's hit board and updates the other player's ship board
-    @Override
     public void CellClick(int row, int col, JPanel cellPanel, GUIView currView) {
         //only listen for clicks once the game has started
         if (turnActive){
@@ -94,14 +93,14 @@ public class GameController implements CellClickListener { //providing implement
                     }
                 }
             }
-            //creating a TimerTask object where updateView() is run inside run(), happens every .6 seconds
+            //update based on timer
             if (isGameOver()) {
                 displayGameOver();
             } else {
                 // Schedule the timer to update the view after 1 second
                 timer.start();
             
-                turnActive = false; // Move this line here
+                turnActive = false; 
             }
         }
     }
@@ -120,7 +119,7 @@ public class GameController implements CellClickListener { //providing implement
         displayShips(currentPlayer, currentView);
         updateBoard(currentPlayer, currentView);
         
-        // Additional view switch logic
+        
         if (currentPlayer == p1 && isP1) {
             guiView2.show();
             guiView.hide();
@@ -173,10 +172,15 @@ public class GameController implements CellClickListener { //providing implement
                 }
             }
         }
+
+        //turn logic
     
         if (isGameOver()) {
-            guiView.hide();
-            guiView2.hide();
+            guiView.getFrame().dispose();
+            guiView2.getFrame().dispose();
+            if (p1hitCount == 17){ //hit count is for your own board (hits totaled), if you reach 17 you lose
+                Player2Win victory = new Player2Win();
+            }else if(p2hitCount == 17){ Player1Win victory = new Player1Win(); }
             System.out.println("Game Over");
         } else {
             if (isP1) {
@@ -189,9 +193,10 @@ public class GameController implements CellClickListener { //providing implement
             playerTurn();
         }
     
-        // Additional board update logic if needed
+
     }
 
+    //function to ask for user input for ship placement
     private void getUserInput(Player player, Ship ship) {
     boolean validInput = false;
 
@@ -202,6 +207,7 @@ public class GameController implements CellClickListener { //providing implement
             // Display ship information
             panel.add(new JLabel("Placing " + ship.getType() + " (" + ship.getSize() + " spaces)"));
 
+            // add all components to Jlabel.
             JTextField xField = new JTextField();
             JTextField yField = new JTextField();
             panel.add(new JLabel("Enter starting X coordinate (0-9):"));
@@ -209,6 +215,7 @@ public class GameController implements CellClickListener { //providing implement
             panel.add(new JLabel("Enter starting Y coordinate (0-9):"));
             panel.add(yField);
 
+            //use a Joption pane to diplay the different options
             String[] options = {"Vertical", "Horizontal"};
             int rotationChoice = JOptionPane.showOptionDialog(
                     null,
@@ -239,17 +246,14 @@ public class GameController implements CellClickListener { //providing implement
     }
 }
     public void startGame() {
-        // Place ships for both players
+        // place ships for both players
+        // tjhis was complicated, since you need to update separately to not overlap the ships
         placeShipsForPlayer(p1, guiView2);
 
         guiView.hide();
         guiView2.show();
 
         placeShipsForPlayer(p2, guiView);
-
-        
-
-        // Additional setup logic if needed
 
         playerTurn();
     }
@@ -265,7 +269,8 @@ public class GameController implements CellClickListener { //providing implement
         return false;
     }
 
-    private void displayGameOver() {
-        guiView.displayMessage("Game over! Player X wins!"); // Example message
+    void displayGameOver(){
+        System.out.println("Game over");
     }
+
 }

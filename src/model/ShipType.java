@@ -7,3 +7,5 @@ public enum ShipType {
     CRUISER,
     DESTROYER
 }
+
+// enum to make 5 types of ships, useful since you only have to declare once

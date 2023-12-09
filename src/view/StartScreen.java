@@ -23,10 +23,10 @@ public class StartScreen {
             frame = new JFrame("Battleship Game");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            // Load background image
+            // load image
             ImageIcon backgroundImage = new ImageIcon(getClass().getResource("Battleship-WMS.png"));
 
-            // Create a layered pane
+            // crreate layered pane
             JLayeredPane layeredPane = new JLayeredPane();
             layeredPane.setPreferredSize(new Dimension(backgroundImage.getIconWidth(), backgroundImage.getIconHeight()));
 
@@ -35,19 +35,19 @@ public class StartScreen {
             backgroundLabel.setBounds(0, 0, backgroundImage.getIconWidth(), backgroundImage.getIconHeight());
             layeredPane.add(backgroundLabel, JLayeredPane.DEFAULT_LAYER);
 
-            // Create Play button
+            // create Play button (starts up the game)
             JButton playButton = new JButton("Play");
             playButton.setBounds(50, 380, 80, 40);
             playButton.addActionListener(this::playButtonClicked);
             layeredPane.add(playButton, JLayeredPane.PALETTE_LAYER);
 
-            // Create Rules button
+            // rules button sends user to webpage
             JButton rulesButton = new JButton("Rules");
             rulesButton.setBounds(150, 380, 80, 40);
             rulesButton.addActionListener(this::rulesButtonClicked);
             layeredPane.add(rulesButton, JLayeredPane.PALETTE_LAYER);
 
-            // Set the frame's content pane to the layered pane
+            // set the frame's content pane to the layered pane
             frame.setContentPane(layeredPane);
 
             frame.pack();
@@ -58,19 +58,19 @@ public class StartScreen {
 
     private void playButtonClicked(ActionEvent e) {
         SwingUtilities.invokeLater(() -> {
-        frame.dispose(); // Close the start screen
+        frame.dispose(); // close start screen
 
         GUIView guiView = new GUIView();
         GUIView guiView2 = new GUIView();
         GameController gameController = new GameController(guiView, guiView2);
 
-        // Ensure visibility changes happen after GUIs are fully initialized
+        // ensure visibility changes happen after GUIs are fully initialized
         SwingUtilities.invokeLater(() -> {
             guiView2.show(); // Show the first GUIView
             guiView.hide(); // Hide the second GUIView
         });
 
-        gameController.startGame();
+        gameController.startGame(); //start the game
     });
     }
 

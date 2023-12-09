@@ -9,7 +9,7 @@ public class Ship {
     public Ship(ShipType type) {
         this.type = type;
         switch(type){
-            case AIRCRAFT_CARRIER:
+            case AIRCRAFT_CARRIER: //this is the enum, so there are 5 types of ships
                 this.size = 5;
                 break;
             case BATTLESHIP:
@@ -26,17 +26,13 @@ public class Ship {
                 break;
         }
         this.position = new int[size][2];
-        this.isHorizontal = true;  // Default orientation is horizontal
+        this.isHorizontal = true; 
     }
 
     public void rotate() {
-        // Rotate the ship 90 degree
-
-
+        //rotate the ship 90 degree (just setting the boolean)
         isHorizontal = !isHorizontal;
     }
-
-    // Getters and setters...
 
     public void setPosition(int x, int y) {
         // Update the position array based on x and y coordinates
@@ -70,6 +66,4 @@ public class Ship {
     public int[][] getPosition() {
         return position;
     }
-
-    // Additional methods...
 }

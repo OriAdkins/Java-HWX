@@ -14,8 +14,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import javax.swing.ImageIcon;
 
-public class GUIView implements GameView {
-    private static final int GRID_SIZE = 10; // Change this for a larger or smaller grid
+public class GUIView  {
+    private static final int GRID_SIZE = 10; // grid size is 10
 
     private JFrame frame;
     // private Ship selectedShip;
@@ -45,7 +45,7 @@ public class GUIView implements GameView {
             //when clicked, take the user to a rules page
             rules.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                // Open the rules webpage when the jlabel rules is clicked
+                //rules webpage
                 openWebpage("https://www.hasbro.com/common/instruct/battleship.pdf");
             }
             });
@@ -58,12 +58,13 @@ public class GUIView implements GameView {
                     if (row != 11 && row != 0){
                         //row 12 is a blank set of JPanels used to divide the boards
                         JPanel cellPanel = new JPanel();
-                        cellPanel.setPreferredSize(new Dimension(40, 25)); // Adjust panel size as needed
+                        cellPanel.setPreferredSize(new Dimension(40, 25));
+                        // make black and green to look like a radar grid 
                         cellPanel.setBackground(Color.BLACK);
-                        cellPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN)); // Add a border for visibility
+                        cellPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
                         cellPanels[row-1][col] = cellPanel; //store all JPanels except for the ones that represent the dividers between the boards
 
-                        // Add a label to make the panels visually distinct
+                        // adding label
                         if (row > 11){
                             row -= 12;
                             isBottom = true;
@@ -77,7 +78,7 @@ public class GUIView implements GameView {
                         cellPanel.add(label);
                         if (isBottom) row += 12;
                         else row += 1;
-
+                        //adding the gridpanel and mouselistener
                         cellPanel.addMouseListener(new CellMouseListener(row, col, this));
                         gridPanel.add(cellPanel);
                     }
@@ -146,25 +147,13 @@ public class GUIView implements GameView {
 
             frame.add(gridPanel, BorderLayout.CENTER);
             frame.pack();
-            frame.setLocationRelativeTo(null); // Center the frame
+            frame.setLocationRelativeTo(null); // center frame
             frame.setVisible(true);
         });
     }
 
     public JFrame getFrame(){
         return frame;
-    }
-
-    // Implement methods from GameView interface to update the display based on game state
-
-    @Override
-    public void displayMessage(String message) {
-        // Update GUI to display a message (e.g., player's turn, game over)
-    }
-
-    @Override
-    public void updateBoardState(int row, int col, boolean isHit) {
-        // Update GUI to reflect the state of a specific cell on the game board
     }
     
     public void show(){
@@ -178,7 +167,7 @@ public class GUIView implements GameView {
         return cellPanels[row][col];
     }
 
-    // MouseListener for cell panels
+    // mouseListener for cell panels
     private class CellMouseListener extends MouseAdapter {
         private final int row;
         private final int col;

@@ -23,10 +23,10 @@ public class Player2Win {
             frame = new JFrame("Victory");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            // Load background image
+            // load image in background
             ImageIcon backgroundImage = new ImageIcon(getClass().getResource("Victory.png"));
 
-            // Create a layered pane
+            // create layered pane (just like plater 1) to add image (we will be adding a button)
             JLayeredPane layeredPane = new JLayeredPane();
             layeredPane.setPreferredSize(new Dimension(backgroundImage.getIconWidth()/2, backgroundImage.getIconHeight()/2));
             //layeredPane.setPreferredSize(new Dimension(300, 533));
@@ -43,7 +43,7 @@ public class Player2Win {
                 }
             });
             layeredPane.add(exitButton, JLayeredPane.PALETTE_LAYER);
-            //JPanel to cover up 1
+            //JPanel to cover up 1 (this shows up as player 2)
             JPanel myPanel = new JPanel();
             myPanel.setPreferredSize(new Dimension(40, 80));
             myPanel.setBackground(Color.BLACK);
@@ -54,7 +54,7 @@ public class Player2Win {
             myPanel.setBounds(480, 135, 40, 100);
             layeredPane.add(myPanel, JLayeredPane.PALETTE_LAYER);
 
-            // Set the frame's content pane to the layered pane
+            // set the frame's content pane to the layered pane
             frame.setContentPane(layeredPane);
 
             frame.pack();
